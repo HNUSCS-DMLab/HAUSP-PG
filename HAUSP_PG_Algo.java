@@ -15,9 +15,7 @@ public class HAUSP_PG_Algo {
     // test dataset
     protected String pathname;
 
-    protected int minUtility;
-
-    protected long huspNum;
+    protected long hauspNum;
     protected long candidateNum;
 //    protected long deletedTimes;
 
@@ -71,7 +69,7 @@ public class HAUSP_PG_Algo {
         this.pathname = pathname;
         this.threshold = threshold;
 
-        huspNum = 0;
+        hauspNum = 0;
         candidateNum = 0;
 
         isDebug = false;
@@ -176,10 +174,8 @@ public class HAUSP_PG_Algo {
             }
         }
 
-        minUtility = (int) (totalUtil * threshold);
-        //Kevin added:
     	minAU = (int) (totalUtil * threshold);    	
-		System.out.println("minUtility1:" + minAU);
+		System.out.println("minAU:" + minAU);
 		
         MemoryLogger.getInstance().checkMemory();
 
@@ -227,7 +223,7 @@ public class HAUSP_PG_Algo {
                 uLinkList.seq = newItems.toArray(new UItem[size]);
                 uLinkList.remainingUtility = new int[size];
                 uLinkList.itemSetIndex = tempItemSetIndices;
-                uLinkList.remainingLen = new int[size];
+//                uLinkList.remainingLen = new int[size];
 
 
 //                uLinkList.headTable = new itemAndIndices[tempHeader.size()];
@@ -278,11 +274,10 @@ public class HAUSP_PG_Algo {
             stats.append("=============  HUSPull_PLUS ALGORITHM - STATS ============\n");
             //stats.append(" Total utility of DB: " + totalUtil + " \n");
     		stats.append(" threshold: " + String.format("%.5f", threshold) + " \n");
-    		stats.append(" minUtility: " + minUtility + " \n");
     		stats.append("minAU: " + minAU + " \n");
     		stats.append("time: " + (System.currentTimeMillis() - currentTime)/1000.0 + " s" + " \n");
     		stats.append("Max memory: " + MemoryLogger.getInstance().getMaxMemory() + "  MB" + " \n");
-    		stats.append("HUSPs: " + huspNum + " \n");
+    		stats.append("HAUSPs: " + hauspNum + " \n");
     		stats.append("Candidates: " + candidateNum);
             writer.write(stats.toString());
             writer.newLine();
@@ -305,7 +300,7 @@ public class HAUSP_PG_Algo {
         MemoryLogger.getInstance().checkMemory();
 //        System.out.println(MemoryLogger.getInstance().getMaxMemory());
         for (Map.Entry<Integer, Integer> entry : mapItemSwu1.entrySet()) {
-            if (entry.getValue() < minUtility) isRemove[entry.getKey()] = true;
+            if (entry.getValue() < minAU) isRemove[entry.getKey()] = true;
         }
 //        firstRemoveItem();
         mapItemSwu1.clear();
@@ -421,7 +416,7 @@ public class HAUSP_PG_Algo {
                 }
 
                 if (sumUtility >= minAU * newprefixLength) {
-                    huspNum += 1;
+                    hauspNum += 1;
                     //prefix.add(addItem);
                     //recordPattern(prefix, sumUtility); // 新增：记录模式
                     //prefix.remove(prefix.size() - 1);
@@ -805,10 +800,11 @@ public class HAUSP_PG_Algo {
 
                         sumUtility += utilityInTXN;
                         upperBound += ubInTXN;
+                    }
                 }
                 
                 if (sumUtility >= minAU * newprefixLength) {
-                    huspNum += 1;
+                    hauspNum += 1;
                     //prefix.add(addItem);
                     //recordPattern(prefix, sumUtility); // 新增：记录模式
                     //prefix.remove(prefix.size() - 1);
@@ -923,7 +919,7 @@ public class HAUSP_PG_Algo {
                 }
 
                 if (sumUtility >= minAU * newprefixLength) {
-                    huspNum += 1;
+                    hauspNum += 1;
                 	//prefix.add(-1);
                     //prefix.add(addItem);
                     //recordPattern(prefix, sumUtility); // 新增：记录模式
@@ -1092,42 +1088,6 @@ public class HAUSP_PG_Algo {
 
 
     /**
-     * Funtion of removeItem, using the position of remaining utility
-     * used for mapItemSwu(swu = position.utility + position.remaining utility)
-     *
-     * @param projectULinkListDB
-     */
-/**
-    protected void removeItem(ArrayList<ProjectULinkList> projectULinkListDB) {
-        if(!DBUpdated)
-            return;
-        for (ProjectULinkList projectULinkList : projectULinkListDB) {
-            ULinkList uLinkList = projectULinkList.getULinkList();
-            ArrayList<UPosition> uPositions = projectULinkList.getUPositions();
-            int positionIndex = uPositions.get(0).index();
-            int remainingUtility = 0;
-            int remainingLength = 0;
-
-            for (int i = uLinkList.length() - 1; i >= positionIndex; --i) {
-                int item = uLinkList.itemName(i);
-
-                if (!isRemove[item]) {
-                    uLinkList.setRemainUtility(i, remainingUtility);
-                    remainingUtility += uLinkList.utility(i);
-                    uLinkList.setRemainLen(i, remainingLength);
-                    remainingLength ++;
-                } else {  // ??? can be delete 
-                    // no, someone >= minUtility should reset remaining utility
-                    uLinkList.setRemainUtility(i, remainingUtility);
-                    uLinkList.setRemainLen(i, remainingLength);
-                }
-            }
-        }
-        DBUpdated = false;
-    }
-*/    
-
-    /**
      * Funtion of removeUnriseItem, using the position of remaining utility
      * used for variant of upper bound
      *
@@ -1212,8 +1172,8 @@ public class HAUSP_PG_Algo {
         return "HuspMiner{" +
                 "threshold= " + threshold +
                 ", DB= '" + pathname.split("/")[pathname.split("/").length - 1] +
-                ", minUtility= " + minUtility +
-                ", huspNum= " + huspNum +
+                ", minAU= " + minAU +
+                ", hauspNum= " + hauspNum +
                 ", candidateNum= " + candidateNum +
                 '}';
     }
@@ -1223,7 +1183,7 @@ public class HAUSP_PG_Algo {
         ArrayList<String> ret = new ArrayList<String>();
         ret.add("HuspMiner");
         ret.add("" + threshold);
-        ret.add("" + huspNum);
+        ret.add("" + hauspNum);
         ret.add("" + candidateNum);
         return ret;
     }
@@ -1234,9 +1194,7 @@ public class HAUSP_PG_Algo {
     public void printStatistics()  {
         System.out.println("=============  HAUSP_PG ALGORITHM - STATS ============");
 //		System.out.println(" Total utility of DB: " + databaseUtility);
-//        System.out.println("minUtility: " + String.format("%.5f", threshold));
-        //Kevin added:
-        System.out.println("minUtility: " + minUtility);
+//        System.out.println("minAU: " + String.format("%.5f", threshold));
         System.out.println("minAU: " + minAU);
         System.out.println("time: " + (System.currentTimeMillis() - currentTime)/1000.0 + " s");
         System.out.println("Max memory: " + MemoryLogger.getInstance().getMaxMemory() + "  MB");
