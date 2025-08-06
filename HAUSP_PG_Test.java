@@ -13,7 +13,7 @@ import java.io.IOException;
  */
 public class HAUSP_PG_Test {
     public static void main(String[] args) throws IOException {
-        double minUtilityRatio = 0.00095;
+        double minUtilityRatio = 0.012;
 //        int nbtopk = 9;
         String dataset = "SIGN";
         String input = "./exp/dataFile/" + dataset + ".txt";
