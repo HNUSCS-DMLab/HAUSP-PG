@@ -1,4 +1,4 @@
-package src.HHAUSP_PG;
+package src.HAUSP_PG;
 
 import java.util.ArrayList;
 
