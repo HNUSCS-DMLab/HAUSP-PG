@@ -1,1 +1,23 @@
+HUSPM
+This repo hosts the codes of papers related to high-average-utility sequential pattern mining (HAUSPM).
 
+Requirements
+Java programming language.
+
+Running the program
+A simple way is to run the java test file.
+
+Benchmarks
+The data format used is the same as the provided dataset files. That is, different positive integers represent different terms. In addition, "-1" is used as the itemset separator and "-2" is used as the sequence separator.
+Additional datasets can be accessed from SPMF.
+Introduction
+HAUSP-PG: A HAUSPM algorithm which was inspired by HUSPM algorithm HUSPM-SP (https://github.com/DSI-Lab1/HUSPM). Moreover, two variants of upper bound models on average utility, namely vPEAU and vTRSAU are proposed in HAUSP-PG.
+Citation
+If these articles or codes useful for your project, please refer to
+
+HUSP-SP:
+@article{
+
+}
+Notes
+If there are any questions, please contact us (19083900110001@hnu.edu.cn).
