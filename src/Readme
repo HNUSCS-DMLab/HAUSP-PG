@@ -1,0 +1,4 @@
+v2.1 vs v2.0
+In the list construction procedure, the global value of the actural length of rrs 
+is calculated through the data structure HashMap, 
+replacing the inequality estimation in the previous version.

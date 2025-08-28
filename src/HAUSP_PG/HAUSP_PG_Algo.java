@@ -1,4 +1,4 @@
-package  src.HAUSP_PG;
+package src.HAUSP_PG;
 
 import java.io.*;
 import java.util.*;
@@ -510,6 +510,7 @@ public class HAUSP_PG_Algo {
     	HashMap<Integer, LastId> mapItemIConcatenationSwu = new HashMap<Integer, LastId>();
         HashMap<Integer, Integer> currentitemUtil = new HashMap<>(); // 当前uLinkList中各item的最大utility
         HashMap<Integer, Integer> maxRsIU = new HashMap<>();
+        HashMap<Integer, Integer> rsIU = new HashMap<>();
         ////        HashMap<Integer, LastId> mapItemIConcatenationSwu0 = new HashMap<Integer, LastId>();
         for (ProjectULinkList projectULinkList : projectedDB) {
             ULinkList uLinkList = projectULinkList.getULinkList();
@@ -540,6 +541,11 @@ public class HAUSP_PG_Algo {
                         	        maxRsIU.merge(rsitem, uLinkList.utility(i), Math::max);
                         	    }
                         	}
+
+                        	maxRsIU.forEach((dI, u) ->
+                            rsIU.merge(dI, u, Integer::sum));   // 或 Double::sum
+                        	maxRsIU.clear();   // 复用
+                        	
                         	int localremainLen = 0;
                         	for (int tempRsIU : maxRsIU.values()) {
                         	    if (tempRsIU >= minAU) localremainLen++;
@@ -561,11 +567,16 @@ public class HAUSP_PG_Algo {
                             	        maxRsIU.merge(rsitem, uLinkList.utility(i), Math::max);
                             	    }
                             	}
+
+                            	maxRsIU.forEach((dI, u) ->
+                                rsIU.merge(dI, u, Integer::sum));   // 或 Double::sum
+                            	maxRsIU.clear();   // 复用
+                            	
                             	int localremainLen = 0;
                             	for (int tempRsIU : maxRsIU.values()) {
                             	    if (tempRsIU >= minAU) localremainLen++;
                             	}
-                            	lastId.localLen = Math.min(localremainLen + prefixLen, lastId.localLen);
+//                            	lastId.localLen = Math.min(localremainLen + prefixLen, lastId.localLen);
 
                             	int trsu = get_TRSU(projectULinkList, index);
                                 lastId.swu += localSwu - trsu;
@@ -621,6 +632,7 @@ public class HAUSP_PG_Algo {
         HashMap<Integer, LastId> mapItemSConcatenationSwu = new HashMap<Integer, LastId>();
         HashMap<Integer, Integer> currentitemUtil = new HashMap<>(); // 当前uLinkList中各item的最大utility
         HashMap<Integer, Integer> maxRsIU = new HashMap<>();
+        HashMap<Integer, Integer> rsIU = new HashMap<>();
         for (ProjectULinkList projectULinkList : projectedDB) {
             ULinkList uLinkList = projectULinkList.getULinkList();
             ArrayList<UPosition> uPositions = projectULinkList.getUPositions();
@@ -665,6 +677,11 @@ public class HAUSP_PG_Algo {
                     	        maxRsIU.merge(rsitem, uLinkList.utility(i), Math::max);
                     	    }
                     	}
+
+                    	maxRsIU.forEach((dI, u) ->
+                        rsIU.merge(dI, u, Integer::sum));   // 或 Double::sum
+                    	maxRsIU.clear();   // 复用
+                    	
                     	int localremainLen = 0;
                     	for (int tempRsIU : maxRsIU.values()) {
                     	    if (tempRsIU >= minAU) localremainLen++;
@@ -684,11 +701,16 @@ public class HAUSP_PG_Algo {
                         	        maxRsIU.merge(rsitem, uLinkList.utility(i), Math::max);
                         	    }
                         	}
+
+                        	maxRsIU.forEach((dI, u) ->
+                            rsIU.merge(dI, u, Integer::sum));   // 或 Double::sum
+                        	maxRsIU.clear();   // 复用
+                        	
                         	int localremainLen = 0;
                         	for (int tempRsIU : maxRsIU.values()) {
                         	    if (tempRsIU >= minAU) localremainLen++;
                         	}
-                        	lastId.localLen = Math.min(localremainLen + prefixLen, lastId.localLen);
+//                        	lastId.localLen = Math.min(localremainLen + prefixLen, lastId.localLen);
 
                         	int trsu = get_TRSU(projectULinkList, index);
                             lastId.swu += localSwu - trsu;
@@ -1007,7 +1029,7 @@ public class HAUSP_PG_Algo {
     void firstRemoveItem() {
         for (ULinkList uLinkList : uLinkListDB) {
             int remainingUtility = 0;
-            int remainingLength = 0;
+//            int remainingLength = 0;
             for (int i = uLinkList.length() - 1; i >= 0; --i) {
                 int item = uLinkList.itemName(i);
                 
